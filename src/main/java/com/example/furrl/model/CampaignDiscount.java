@@ -13,7 +13,7 @@ public class CampaignDiscount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String productId;
+    private Long productId;
     @Column
     private double discount;
 }

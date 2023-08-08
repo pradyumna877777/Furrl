@@ -21,11 +21,9 @@ public class ProductService {
     @Autowired
     private PricingHistoryRepository pricingHistoryRepository;
 
-    public List<Product> getAllProducts(int page, int pageSize) {
+    public Page<Product> getAllProducts(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize);
-        Page<Product> productPage = productRepository.findAll(pageable);
-
-        return productPage.getContent();
+        return productRepository.findAll(pageable);
     }
 
 }

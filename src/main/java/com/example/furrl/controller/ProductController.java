@@ -1,11 +1,13 @@
 package com.example.furrl.controller;
 
 
+import com.example.furrl.dto.ProductPageResponse;
 import com.example.furrl.model.PricingHistory;
 import com.example.furrl.model.Product;
 import com.example.furrl.service.PricingHistoryService;
 import com.example.furrl.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +24,17 @@ public class ProductController {
     private PricingHistoryService pricingHistoryService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(
+    public ResponseEntity<ProductPageResponse> getAllProducts(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        List<Product> products = productService.getAllProducts(page, pageSize);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        Page<Product> productPage = productService.getAllProducts(page, pageSize);
+        ProductPageResponse response = new ProductPageResponse();
+        response.setProductData(productPage.getContent());
+        response.setPage(page);
+        response.setPageSize(pageSize);
+        response.setTotalPages(productPage.getTotalPages());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{productId}/price-history")
